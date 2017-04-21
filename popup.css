@@ -1,0 +1,13 @@
+:root {
+	background: rgb(240, 240, 240);
+	color: rgb(40, 40, 40);
+}
+* {
+	font-family: sans-serif;
+	user-select: none;
+}
+
+#config-pane {
+	text-align: center;
+	padding: 3em 1.5em;
+}
