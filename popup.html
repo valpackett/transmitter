@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="popup.css">
+
+<div id="config-pane" hidden>
+	<strong>Welcome to Transmitter!</strong><br>
+	The server address is not set yet.<br>
+	<a href="#" id="config-opener">Open the settings</a> to continue.
+</div>
+
+<div id="torrents-pane" hidden>
+	<template id="torrents-tpl">
+		<li>
+			<div class="torrent-name"></div>
+		</li>
+	</template>
+	<ul id="torrents-list">
+	</ul>
+</div>
+
+<script src="browser-polyfill.min.js"></script>
+<script src="common.js"></script>
+<script src="popup.js"></script>

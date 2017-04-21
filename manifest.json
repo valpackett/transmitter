@@ -1,0 +1,48 @@
+{
+  "manifest_version": 2,
+  "name": "Transmitter for Transmission",
+  "author": "unrelenting.technology",
+  "version": "1.0",
+  "description": "Communicates with the Transmission BitTorrent client. Supports adding .torrent files and magnet: links, also adds an icon for quickly looking at torrent status.",
+  "applications": {
+    "gecko": {
+      "id": "transmitter@unrelenting.technology"
+    }
+  },
+  "icons": {
+    "128": "icon.svg",
+    "48": "icon48.png",
+    "32": "icon.svg"
+  },
+  "permissions": [
+    "alarms",
+    "contextMenus",
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "optional_permissions": [ "webRequest", "webRequestBlocking", "http://*/*", "https://*/*" ],
+  "options_ui": {
+    "page": "options.html"
+  },
+  "browser_action": {
+    "default_icon": {
+      "128": "icon.svg",
+      "48": "icon48.png"
+    },
+    "default_title": "Transmitter",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "persistent": true,
+    "scripts": ["browser-polyfill.min.js", "common.js", "background.js"]
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "magnet",
+      "name": "Transmitter for Transmission",
+      "uriTemplate": "http://transmitter.-web-extension/%s"
+    }
+  ]
+}

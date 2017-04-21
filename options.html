@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="options.css">
+
+<form id="options-form">
+	<input type="hidden" name="session">
+	<label>
+		<div>Server URL <small>(…/transmission/, without /web/ or /rpc/ at the end)</small></div>
+		<input type="url" name="base_url">
+	</label>
+	<label>
+		<div>Icon badge</div>
+		<select name="badge">
+			<option value="off">N O T H I N G</option>
+			<option value="num">Number of torrents</option>
+			<option value="dl">Download speed</option>
+			<option value="ul">Upload speed</option>
+		</select>
+	</label>
+	<label>
+		<div>Badge refresh interval <small>(minutes)</small></div>
+		<input type="number" name="badge_interval" value="1" min="1">
+	</label>
+	<button type="submit">Save</button>
+	<p>
+		Note: to log in, just go to the web interface. Transmitter will pick up your session.
+	</p>
+</form>
+
+<script src="browser-polyfill.min.js"></script>
+<script src="options.js"></script>
