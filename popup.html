@@ -5,17 +5,28 @@
 <div id="config-pane" hidden>
 	<strong>Welcome to Transmitter!</strong><br>
 	The server address is not set yet.<br>
-	<a href="#" id="config-opener">Open the settings</a> to continue.
+	<a href="#" class="config-opener">Open the settings</a> to continue.
 </div>
 
 <div id="torrents-pane" hidden>
+	<header>
+		<h1>Transmitter</h1>
+		<a href="#" class="webui-opener" target="_blank"><img src="icon.svg" alt="Open Web UI"></a>
+		<a href="#" class="config-opener"><img src="gear.svg" alt="Settings"></a>
+		<a href="https://github.com/myfreeweb/transmitter" class="info-opener" target="_blank"><img src="info.svg" alt="Extension Info"></a>
+	</header>
 	<template id="torrents-tpl">
 		<li>
-			<div class="torrent-name"></div>
+			<div class="torrent-head">
+				<div><div class="torrent-name"></div></div>
+				<div class="torrent-speeds"></div>
+			</div>
+			<progress max="100" class="torrent-progress"></progress>
 		</li>
 	</template>
 	<ul id="torrents-list">
 	</ul>
+	<div id="torrents-error"></div>
 </div>
 
 <script src="browser-polyfill.min.js"></script>
