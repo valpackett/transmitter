@@ -8,12 +8,18 @@ form.addEventListener('submit', e => {
 		return obj
 	}, {})
 	delete data['']
+	/*
+	When this works everywhere, replace <all_urls> with http://transmitter.-web-extension/* in manifest.json.
+	Unfortunately, right now this is unsupported in Firefox and Edge…
+	and even worse, in Opera the API exists but requesting a user-specified host is not possible!
+
 	if (browser.permissions) {
 		browser.permissions.request({
 			permissions: ['webRequest', 'webRequestBlocking'],
 			origins: [data.base_url + '*']
 		})
 	}
+	*/
 	browser.storage.local.set({server: data}).then(() => {
 		btn.innerHTML = 'Saved!'
 		setTimeout(() => {

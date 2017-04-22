@@ -86,8 +86,8 @@ function updateBadge () {
 		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'num') {
 			return
 		}
-		return rpcCall('session-stats', {}).then(server => {
-			const args = server.arguments // lol the name 'arguments' means destructuring in strict mode is impossible
+		return rpcCall('session-stats', {}).then(response => {
+			const args = response.arguments // lol the name 'arguments' means destructuring in strict mode is impossible
 			switch (server.badge) {
 				case 'num':
 					browser.browserAction.setBadgeBackgroundColor({color: 'gray'})
