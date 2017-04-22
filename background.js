@@ -53,16 +53,16 @@ function addUrl (torrent_url) {
 ////// magnet: Handler
 
 function handleUrl (requestDetails) {
-	addUrl(requestDetails.url.replace('http://transmitter.-web-extension/', ''))
+	return addUrl(decodeURIComponent(requestDetails.url.replace('http://transmitter.-web-extension/', '')))
 	.then(x => {
 		return browser.storage.local.get('server').then(({server}) => {
-			{ redirectUrl: server.base_url + 'web' }
+			return { redirectUrl: server.base_url + 'web/' }
 		})
 	})
 }
 
 browser.webRequest.onBeforeRequest.addListener(
-	handleUrl, {urls:['http://transmitter.-web-extension/*']}, ['blocking']
+	handleUrl, { urls: ['http://transmitter.-web-extension/*'] }, ['blocking']
 )
 
 ////// Context menu
@@ -83,7 +83,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 function updateBadge () {
 	browser.storage.local.get('server').then(({server}) => {
-		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'num') {
+		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'ul') {
 			return
 		}
 		return rpcCall('session-stats', {}).then(response => {
@@ -129,7 +129,8 @@ function setupBadge () {
 browser.storage.onChanged.addListener((changes, area) => {
 	if (Object.keys(changes).includes('server')
 		&& changes.server.oldValue
-		&& changes.server.newValue.badge_interval !== changes.server.oldValue.badge_interval) {
+		&& (changes.server.newValue.badge_interval !== changes.server.oldValue.badge_interval
+		 || changes.server.newValue.badge !== changes.server.oldValue.badge)) {
 		setupBadge()
 	}
 })

@@ -1,4 +1,4 @@
-# Transmitter
+# Transmitter [![unlicense](https://img.shields.io/badge/un-license-green.svg?style=flat)](http://unlicense.org)
 
 a WebExtension for the [Transmission](https://transmissionbt.com/) BitTorrent client.
 

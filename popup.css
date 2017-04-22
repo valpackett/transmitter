@@ -1,6 +1,6 @@
-:root {
+body, html {
 	background: rgb(240, 240, 240);
-	color: rgb(40, 40, 40);
+	color: rgb(60, 60, 60);
 }
 * {
 	font-family: sans-serif;
@@ -10,4 +10,54 @@
 #config-pane {
 	text-align: center;
 	padding: 3em 1.5em;
+}
+
+#torrents-pane {
+	min-width: 360px;
+}
+header {
+	display: flex;
+	align-items: center;
+	padding: 0.1rem 1rem;
+}
+header :first-child {
+	flex: 1;
+}
+header h1 {
+	font-size: 1.3rem;
+}
+header img {
+	width: 1.8rem;
+	height: 1.8rem;
+	margin-left: 0.8em;
+}
+#torrents-list {
+	background: white;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#torrents-list li {
+	margin: 0;
+	padding: 1rem;
+	border-bottom:1px solid rgb(240, 240, 240);
+}
+#torrents-list li:last-child {
+	border-bottom-width: 0;
+}
+#torrents-list progress {
+	width: 100%;
+	margin-top: 0.2rem;
+}
+.torrent-head {
+	display: flex;
+}
+.torrent-head :first-child {
+	flex: 1;
+}
+.torrent-name {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 280px;
 }
