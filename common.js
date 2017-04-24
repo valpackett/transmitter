@@ -13,6 +13,16 @@ function rpcCall (meth, args) {
 			body: JSON.stringify({method: meth, arguments: args}),
 			credentials: 'include' // allows HTTPS client certs!
 		}).then(response => {
+			const session = response.headers.get('x-transmission-session-id')
+			if (session) {
+				browser.storage.local.get('server').then(({server}) => {
+					server.session = session
+					browser.storage.local.set({server})
+				})
+			}
+			if (response.status === 409) {
+				return rpcCall(meth, args)
+			}
 			if (response.status >= 200 && response.status < 300) {
 				return response
 			}
