@@ -6,7 +6,7 @@ a WebExtension for the [Transmission](https://transmissionbt.com/) BitTorrent cl
 
 <a href="https://addons.mozilla.org/en-US/firefox/addon/transmitter-for-transmission/"><img alt="Get for Firefox" src="https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_1.png" width="172" height="60"></a>
 
-<a href="https://addons.opera.com/en/extensions/details/transmitter-for-transmission/"><img alt="Get for Opera" src="https://dev.opera.com/extensions/branding-guidelines/addons_206x58_en@2x.png" width="206" height="58"></a> (awaiting moderation)
+<a href="https://addons.opera.com/en/extensions/details/transmitter-for-transmission/"><img alt="Get for Opera" src="https://dev.opera.com/extensions/branding-guidelines/addons_206x58_en@2x.png" width="206" height="58"></a>
 
 <a href="https://chrome.google.com/webstore/detail/transmitter-for-transmiss/cdmpmfcgepijfiaaojbahpmpjfkgdgja"><img alt="Get for Chrome" src="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_496x150.png" width="206" height="58"></a>
 
