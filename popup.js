@@ -23,19 +23,30 @@ const getArgs = {
 
 function refreshTorrents (server) {
 	rpcCall('torrent-get', getArgs).then(response => {
-		const args = response.arguments
-		torrentsList.innerHTML = ''
-		for (const torr of args.torrents) {
-			const node = document.importNode(torrentsTpl.content, true)
-			node.querySelector('.torrent-name').innerHTML = torr.name
-			node.querySelector('.torrent-speeds').innerHTML =
-				'↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
-			node.querySelector('.torrent-progress').value = torr.percentDone * 100
-			torrentsList.appendChild(node)
+		const newTorrents = response.arguments.torrents
+		if (torrentsList.children.length < newTorrents.length) {
+			const dif = newTorrents.length - torrentsList.children.length
+			for (let i = 0; i < dif; i++) {
+				const node = document.importNode(torrentsTpl.content, true)
+				torrentsList.appendChild(node)
+			}
+		} else if (torrentsList.children.length > newTorrents.length) {
+			const dif = torrentsList.children.length - newTorrents.length
+			for (let i = 1; i <= dif; i++) {
+				torrentsList.removeChild(torrentsList.children[torrentsList.children.length - i])
+			}
+		}
+		for (let i = 0; i < newTorrents.length; i++) {
+			const torr = newTorrents[i]
+			const cont = torrentsList.children[i]
+			const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
+			cont.querySelector('.torrent-name').textContent = torr.name
+			cont.querySelector('.torrent-speeds').textContent = speeds
+			cont.querySelector('.torrent-progress').value = torr.percentDone * 100
 		}
 	}).catch(err => {
 		console.error(err)
-		torrentsError.innerHTML = 'Error: ' + err.description
+		torrentsError.textContent = 'Error: ' + err.description
 	})
 }
 
