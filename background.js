@@ -53,7 +53,7 @@ function addUrl (torrent_url) {
 ////// magnet: Handler
 
 function handleUrl (requestDetails) {
-	return addUrl(decodeURIComponent(requestDetails.url.replace('http://transmitter.-web-extension/', '')))
+	return addUrl(decodeURIComponent(requestDetails.url.replace('http://transmitter.web-extension/', '')))
 	.then(x => {
 		return browser.storage.local.get('server').then(({server}) => {
 			return { redirectUrl: server.base_url + 'web/' }
@@ -62,7 +62,7 @@ function handleUrl (requestDetails) {
 }
 
 browser.webRequest.onBeforeRequest.addListener(
-	handleUrl, { urls: ['http://transmitter.-web-extension/*'] }, ['blocking']
+	handleUrl, { urls: ['http://transmitter.web-extension/*'] }, ['blocking']
 )
 
 ////// Context menu
