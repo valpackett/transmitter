@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Transmitter for Transmission",
   "author": "packett.cool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Communicates with Transmission torrent client. Supports adding torrents (incl. magnet links) & quickly looking at torrent status.",
   "applications": {
     "gecko": {
