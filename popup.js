@@ -22,7 +22,7 @@ const getArgs = {
 }
 
 function refreshTorrents (server) {
-	rpcCall('torrent-get', getArgs).then(response => {
+	return rpcCall('torrent-get', getArgs).then(response => {
 		const newTorrents = response.arguments.torrents
 		newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
 		if (torrentsList.children.length < newTorrents.length) {
@@ -45,7 +45,11 @@ function refreshTorrents (server) {
 			cont.querySelector('.torrent-speeds').textContent = speeds
 			cont.querySelector('.torrent-progress').value = torr.percentDone * 100
 		}
-	}).catch(err => {
+	})
+}
+
+function refreshTorrentsLogErr (server) {
+	return refreshTorrents(server).catch(err => {
 		console.error(err)
 		torrentsError.textContent = 'Error: ' + err.description
 	})
@@ -57,8 +61,8 @@ function showTorrents (server) {
 	for (const opener of document.querySelectorAll('.webui-opener')) {
 		opener.href = server.base_url + 'web/'
 	}
-	refreshTorrents(server)
-	setInterval(() => refreshTorrents(server), 2000)
+	refreshTorrents(server).catch(_ => refreshTorrentsLogErr(server))
+	setInterval(() => refreshTorrentsLogErr(server), 2000)
 }
 
 browser.storage.local.get('server').then(({server}) => {
