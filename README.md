@@ -17,6 +17,7 @@ a WebExtension for the [Transmission](https://transmissionbt.com/) BitTorrent cl
 - Adds a context menu item for downloading torrents (both `magnet`s and links to `.torrent` files) on your remote Transmission server.
 - Adds a direct `magnet:` handler too. (Firefox only)
 - Adds a browser action (popup toolbar icon thing) that lets you view existing torrents' status.
+- You can even search in the popup if you have a lot of torrents.
 - That button even has a badge (auto-updating torrent count / download speed / upload speed).
 - The extension is very lightweight. Pure modern JavaScript, no library dependencies except for [a tiny polyfill for Chrome/Opera/etc. compatibility](https://github.com/mozilla/webextension-polyfill). No build step.
 - Automatically picks up your session from the Transmission web UI, no need for separate authentication.
