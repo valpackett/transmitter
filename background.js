@@ -1,7 +1,5 @@
 'use strict'
 
-//browser.storage.local.set({server: {base_url: 'https://andasreth.lan/transmission/'}}).then(setupExtractor)
-
 ////// Session extraction
 
 function setupExtractor () {
@@ -18,13 +16,6 @@ function setupExtractor () {
 }
 
 setupExtractor()
-browser.storage.onChanged.addListener((changes, area) => {
-	if (Object.keys(changes).includes('server')
-		&& changes.server.oldValue
-		&& changes.server.newValue.base_url !== changes.server.oldValue.base_url) {
-		setupExtractor()
-	}
-})
 
 function extractSession (requestDetails) {
 	const hdr = requestDetails.requestHeaders
@@ -126,12 +117,20 @@ function setupBadge () {
 	})
 }
 
+setupBadge()
+
+////// Storage updates
+
 browser.storage.onChanged.addListener((changes, area) => {
-	if (Object.keys(changes).includes('server')
-		&& changes.server.oldValue
-		&& (changes.server.newValue.badge_interval !== changes.server.oldValue.badge_interval
-		 || changes.server.newValue.badge !== changes.server.oldValue.badge)) {
+	if (!Object.keys(changes).includes('server')) {
+		return
+	}
+	const oldv = changes.server.oldValue
+	const newv = changes.server.newValue
+	if (!oldv || oldv.base_url !== newv.base_url || oldv.username !== newv.username ||
+		oldv.password !== newv.password || oldv.badge_interval !== newv.badge_interval || oldv.badge !== newv.badge) {
+		setupExtractor()
 		setupBadge()
+		updateBadge()
 	}
 })
-setupBadge()
