@@ -1,4 +1,8 @@
-# Transmitter [![unlicense](https://img.shields.io/badge/un-license-green.svg?style=flat)](http://unlicense.org)
+[![Mozilla Add-on](https://img.shields.io/amo/v/transmitter-for-transmission.svg)](https://addons.mozilla.org/en-US/firefox/addon/transmitter-for-transmission/)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/cdmpmfcgepijfiaaojbahpmpjfkgdgja.svg)](https://chrome.google.com/webstore/detail/transmitter-for-transmiss/cdmpmfcgepijfiaaojbahpmpjfkgdgja)
+[![unlicense](https://img.shields.io/badge/un-license-green.svg?style=flat)](http://unlicense.org)
+
+# Transmitter
 
 ![Screenshot](https://addons.cdn.mozilla.net/user-media/previews/full/184/184029.png?modified=1492874124)
 
