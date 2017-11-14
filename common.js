@@ -4,13 +4,13 @@
 
 function rpcCall (meth, args) {
 	return browser.storage.local.get('server').then(({server}) => {
-    var myHeaders = {
-      'Content-Type': 'application/json',
-      'x-transmission-session-id': server.session,
-    }
-    if (server.username !== "") {
-      myHeaders['Authorization'] = 'Basic ' + btoa(server.username + ":" + server.password);
-    }
+		const myHeaders = {
+			'Content-Type': 'application/json',
+			'x-transmission-session-id': server.session,
+		}
+		if (server.username !== "") {
+			myHeaders['Authorization'] = 'Basic ' + btoa(server.username + ":" + server.password);
+		}
 		return fetch(server.base_url + 'rpc', {
 			method: 'POST',
 			headers: myHeaders,
