@@ -20,6 +20,9 @@ form.addEventListener('submit', e => {
 		})
 	}
 	*/
+	if (!data.base_url.endsWith('/transmission/')) {
+		alert('WARNING: Server URL does not end with /transmission/ — make sure it is actually correct!')
+	}
 	browser.storage.local.set({server: data}).then(() => {
 		btn.innerHTML = 'Saved!'
 		setTimeout(() => {
