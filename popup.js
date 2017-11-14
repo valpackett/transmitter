@@ -14,36 +14,61 @@ function showConfig (server) {
 	configPane.hidden = false
 }
 
+const torrentsSearch = document.getElementById('torrents-search')
 const torrentsList = document.getElementById('torrents-list')
 const torrentsTpl = document.getElementById('torrents-tpl')
 const torrentsError = document.getElementById('torrents-error')
 const getArgs = {
 	fields: ['name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
 }
+let cachedTorrents = []
+
+function renderTorrents (newTorrents) {
+	if (torrentsList.children.length < newTorrents.length) {
+		const dif = newTorrents.length - torrentsList.children.length
+		for (let i = 0; i < dif; i++) {
+			const node = document.importNode(torrentsTpl.content, true)
+			torrentsList.appendChild(node)
+		}
+	} else if (torrentsList.children.length > newTorrents.length) {
+		const oldLen = torrentsList.children.length
+		const dif = oldLen - newTorrents.length
+		for (let i = 1; i <= dif; i++) {
+			torrentsList.removeChild(torrentsList.children[oldLen - i])
+		}
+	}
+	for (let i = 0; i < newTorrents.length; i++) {
+		const torr = newTorrents[i]
+		const cont = torrentsList.children[i]
+		const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
+		cont.querySelector('.torrent-name').textContent = torr.name
+		cont.querySelector('.torrent-speeds').textContent = speeds
+		cont.querySelector('.torrent-progress').value = torr.percentDone * 100
+	}
+}
+
+function searchTorrents () {
+	let newTorrents = cachedTorrents
+	const val = torrentsSearch.value.toLowerCase().trim()
+	if (val.length > 0) {
+		newTorrents = newTorrents.filter(x => x.name.toLowerCase().includes(val))
+	}
+	renderTorrents(newTorrents)
+}
+torrentsSearch.addEventListener('change', searchTorrents)
+torrentsSearch.addEventListener('keyup', searchTorrents)
 
 function refreshTorrents (server) {
 	return rpcCall('torrent-get', getArgs).then(response => {
-		const newTorrents = response.arguments.torrents
+		let newTorrents = response.arguments.torrents
 		newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
-		if (torrentsList.children.length < newTorrents.length) {
-			const dif = newTorrents.length - torrentsList.children.length
-			for (let i = 0; i < dif; i++) {
-				const node = document.importNode(torrentsTpl.content, true)
-				torrentsList.appendChild(node)
-			}
-		} else if (torrentsList.children.length > newTorrents.length) {
-			const dif = torrentsList.children.length - newTorrents.length
-			for (let i = 1; i <= dif; i++) {
-				torrentsList.removeChild(torrentsList.children[torrentsList.children.length - i])
-			}
-		}
-		for (let i = 0; i < newTorrents.length; i++) {
-			const torr = newTorrents[i]
-			const cont = torrentsList.children[i]
-			const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
-			cont.querySelector('.torrent-name').textContent = torr.name
-			cont.querySelector('.torrent-speeds').textContent = speeds
-			cont.querySelector('.torrent-progress').value = torr.percentDone * 100
+		cachedTorrents = newTorrents
+		torrentsSearch.hidden = newTorrents.length <= 8
+		if (torrentsSearch.hidden) {
+			torrentsSearch.value = ''
+			renderTorrents(newTorrents)
+		} else {
+			searchTorrents()
 		}
 	})
 }
@@ -51,7 +76,7 @@ function refreshTorrents (server) {
 function refreshTorrentsLogErr (server) {
 	return refreshTorrents(server).catch(err => {
 		console.error(err)
-		torrentsError.textContent = 'Error: ' + err.description
+		torrentsError.textContent = 'Error: ' + err.toString()
 	})
 }
 
