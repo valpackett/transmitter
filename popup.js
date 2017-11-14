@@ -18,12 +18,13 @@ const torrentsList = document.getElementById('torrents-list')
 const torrentsTpl = document.getElementById('torrents-tpl')
 const torrentsError = document.getElementById('torrents-error')
 const getArgs = {
-	fields: ['name', 'percentDone', 'rateDownload', 'rateUpload']
+	fields: ['name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
 }
 
 function refreshTorrents (server) {
 	rpcCall('torrent-get', getArgs).then(response => {
 		const newTorrents = response.arguments.torrents
+		newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
 		if (torrentsList.children.length < newTorrents.length) {
 			const dif = newTorrents.length - torrentsList.children.length
 			for (let i = 0; i < dif; i++) {
