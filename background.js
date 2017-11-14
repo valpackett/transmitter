@@ -31,11 +31,36 @@ function extractSession (requestDetails) {
 
 ////// Adding
 
+function blobToBase64 (blob) {
+	return new Promise((resolve, reject) => {
+		const rdr = new FileReader()
+		rdr.onload = () => resolve(rdr.result.substr(rdr.result.indexOf(',') + 1))
+		rdr.onerror = reject
+		rdr.readAsDataURL(blob)
+	})
+}
+
 function addUrl (torrent_url) {
-	console.log('Adding URL', torrent_url)
-	return rpcCall('torrent-add', {
-		filename: torrent_url
-	}).then(x => {
+	let p
+	if (torrent_url.startsWith('magnet:')) {
+		console.log('Adding magnet', torrent_url)
+		p = rpcCall('torrent-add', { filename: torrent_url })
+	} else {
+		// Download the torrent file *in the browser* to support private torrents
+		console.log('Downloading torrent', torrent_url)
+		p = fetch(torrent_url, {
+			method: 'GET',
+			credentials: 'include',
+		}).then(resp => {
+			if (resp.ok) {
+				return resp.blob()
+			}
+			throw new Error('Could not download torrent')
+		}).then(blobToBase64).then(b64 => {
+			return rpcCall('torrent-add', { metainfo: b64 })
+		})
+	}
+	return p.then(x => {
 		updateBadge()
 		return x
 	})
