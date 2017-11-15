@@ -8,8 +8,8 @@ function rpcCall (meth, args) {
 			'Content-Type': 'application/json',
 			'x-transmission-session-id': server.session,
 		}
-		if (server.username !== "") {
-			myHeaders['Authorization'] = 'Basic ' + btoa(server.username + ":" + server.password);
+		if (server.username !== '') {
+			myHeaders['Authorization'] = 'Basic ' + btoa(server.username + ':' + server.password)
 		}
 		return fetch(server.base_url + 'rpc', {
 			method: 'POST',

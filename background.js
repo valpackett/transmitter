@@ -40,15 +40,15 @@ function blobToBase64 (blob) {
 	})
 }
 
-function addUrl (torrent_url) {
+function addUrl (torrentUrl) {
 	let p
-	if (torrent_url.startsWith('magnet:')) {
-		console.log('Adding magnet', torrent_url)
-		p = rpcCall('torrent-add', { filename: torrent_url })
+	if (torrentUrl.startsWith('magnet:')) {
+		console.log('Adding magnet', torrentUrl)
+		p = rpcCall('torrent-add', { filename: torrentUrl })
 	} else {
 		// Download the torrent file *in the browser* to support private torrents
-		console.log('Downloading torrent', torrent_url)
-		p = fetch(torrent_url, {
+		console.log('Downloading torrent', torrentUrl)
+		p = fetch(torrentUrl, {
 			method: 'GET',
 			credentials: 'include',
 		}).then(resp => {
@@ -70,11 +70,11 @@ function addUrl (torrent_url) {
 
 function handleUrl (requestDetails) {
 	return addUrl(decodeURIComponent(requestDetails.url.replace('http://transmitter.web-extension/', '')))
-	.then(x => {
-		return browser.storage.local.get('server').then(({server}) => {
-			return { redirectUrl: server.base_url + 'web/' }
+		.then(x => {
+			return browser.storage.local.get('server').then(({server}) => {
+				return { redirectUrl: server.base_url + 'web/' }
+			})
 		})
-	})
 }
 
 browser.webRequest.onBeforeRequest.addListener(
@@ -105,18 +105,18 @@ function updateBadge () {
 		return rpcCall('session-stats', {}).then(response => {
 			const args = response.arguments // lol the name 'arguments' means destructuring in strict mode is impossible
 			switch (server.badge) {
-				case 'num':
-					browser.browserAction.setBadgeBackgroundColor({color: 'gray'})
-					browser.browserAction.setBadgeText({text: '' + args.activeTorrentCount})
-					break
-				case 'dl':
-					browser.browserAction.setBadgeBackgroundColor({color: 'green'})
-					browser.browserAction.setBadgeText({text: formatSpeed(args.downloadSpeed)})
-					break
-				case 'ul':
-					browser.browserAction.setBadgeBackgroundColor({color: 'blue'})
-					browser.browserAction.setBadgeText({text: formatSpeed(args.uploadSpeed)})
-					break
+			case 'num':
+				browser.browserAction.setBadgeBackgroundColor({color: 'gray'})
+				browser.browserAction.setBadgeText({text: '' + args.activeTorrentCount})
+				break
+			case 'dl':
+				browser.browserAction.setBadgeBackgroundColor({color: 'green'})
+				browser.browserAction.setBadgeText({text: formatSpeed(args.downloadSpeed)})
+				break
+			case 'ul':
+				browser.browserAction.setBadgeBackgroundColor({color: 'blue'})
+				browser.browserAction.setBadgeText({text: formatSpeed(args.uploadSpeed)})
+				break
 			}
 		})
 	})

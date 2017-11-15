@@ -2,9 +2,11 @@
   "extends": "standard",
   "parserOptions": { "ecmaVersion": 8 },
   "env": { "browser": true, "webextensions": true },
-  "globals": { },
+  "globals": { "rpcCall": false, "formatSpeed": false },
   "rules": {
     "no-tabs": "off",
+    "no-unused-vars": "off",
+    "spaced-comment": "off",
     "indent": ["error", "tab"],
     "comma-dangle": ["error", "only-multiline"]
   }
