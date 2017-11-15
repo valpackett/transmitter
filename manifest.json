@@ -10,7 +10,7 @@
     }
   },
   "icons": {
-    "128": "icon.svg",
+    "64": "icon.svg",
     "48": "icon48.png",
     "32": "icon.svg"
   },
@@ -29,7 +29,7 @@
   },
   "browser_action": {
     "default_icon": {
-      "128": "icon.svg",
+      "64": "icon.svg",
       "48": "icon48.png"
     },
     "default_title": "Transmitter",
