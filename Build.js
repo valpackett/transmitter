@@ -26,6 +26,7 @@ fxzip.generateNodeStream({type: 'nodebuffer', streamFiles: true})
 
 const crzip = new JSZip()
 addCode(crzip)
+crzip.file('icon16.png', fs.readFileSync('icon16.png'))
 crzip.file('icon32.png', fs.readFileSync('icon32.png'))
 crzip.file('icon128.png', fs.readFileSync('icon128.png'))
 const crmanifest = require('./manifest.json')
@@ -35,6 +36,7 @@ crmanifest.icons = crmanifest.browser_action.default_icon = {
 	'128': 'icon128.png',
 	'48': 'icon48.png',
 	'32': 'icon32.png',
+	'16': 'icon16.png',
 }
 crzip.file('manifest.json', JSON.stringify(crmanifest))
 crzip.generateNodeStream({type: 'nodebuffer', streamFiles: true})
