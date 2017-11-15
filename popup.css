@@ -16,14 +16,22 @@ body, html {
 #torrents-pane {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-start;
 	max-width: 420px;
 	max-height: 500px;
 }
 
 header {
+	flex: none;
 	display: flex;
 	align-items: center;
-	padding: 0.1rem 1rem;
+	padding: 0.8em 1em 0.5em;
+}
+
+@supports (not (-moz-appearance: none)) {
+	header {
+		padding: 0.5em 1em;
+	}
 }
 
 header :first-child {
@@ -31,18 +39,22 @@ header :first-child {
 }
 
 header h1 {
-	font-size: 1.3rem;
+	font-size: 1.3em;
+	margin: 0;
+	padding: 0 0 0.1em;
 }
 
 header img {
-	width: 1.8rem;
-	height: 1.8rem;
+	width: 1.8em;
+	height: 1.8em;
 	margin-left: 0.8em;
 }
 
 #torrents-search {
-	margin: 0 1rem 0.6rem;
-	padding: 0.4rem;
+	flex: none;
+	display: block;
+	margin: 0 1em 0.6em;
+	padding: 0.4em;
 	border-radius: 3px;
 	border: 1px solid #999;
 }
@@ -61,7 +73,7 @@ header img {
 
 #torrents-list li {
 	margin: 0;
-	padding: 1rem;
+	padding: 1em;
 	border-bottom: 1px solid rgb(240, 240, 240);
 }
 
@@ -71,7 +83,7 @@ header img {
 
 #torrents-list progress {
 	width: 100%;
-	margin-top: 0.2rem;
+	margin-top: 0.2em;
 }
 
 .torrent-head {
