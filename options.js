@@ -1,4 +1,5 @@
 const form = document.getElementById('options-form')
+const warning = document.getElementById('warning')
 const btn = form.querySelector('button')
 
 form.addEventListener('submit', e => {
@@ -21,7 +22,10 @@ form.addEventListener('submit', e => {
 	}
 	*/
 	if (!data.base_url.endsWith('/transmission/')) {
-		alert('WARNING: Server URL does not end with /transmission/ — make sure it is actually correct!')
+		warning.innerHTML = 'WARNING: Server URL does not end with /transmission/ — make sure it is correct! (If you actually customized it on the server side, it will work fine.)'
+		warning.hidden = false
+	} else {
+		warning.hidden = true
 	}
 	browser.storage.local.set({server: data}).then(() => {
 		btn.innerHTML = 'Saved!'
