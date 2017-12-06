@@ -19,7 +19,7 @@ a WebExtension for the [Transmission](https://transmissionbt.com/) BitTorrent cl
 - Adds a browser action (popup toolbar icon thing) that lets you view existing torrents' status.
 - You can even search in the popup if you have a lot of torrents.
 - That button even has a badge (auto-updating torrent count / download speed / upload speed).
-- The extension is very lightweight. Pure modern JavaScript, no library dependencies except for [a tiny polyfill for Chrome/Opera/etc. compatibility](https://github.com/mozilla/webextension-polyfill). No build step.
+- The extension is very lightweight. Pure modern JavaScript, no library dependencies except for [a tiny polyfill for Chrome/Opera/etc. compatibility](https://github.com/mozilla/webextension-polyfill).
 - Automatically picks up your session from the Transmission web UI, no need for separate authentication.
 - Works fine if your Transmission instance is behind a reverse proxy that uses [TLS client certificates](https://github.com/myfreeweb/damnx509).
 
