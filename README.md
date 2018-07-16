@@ -1,6 +1,14 @@
-[![Mozilla Add-on](https://img.shields.io/amo/v/transmitter-for-transmission.svg)](https://addons.mozilla.org/en-US/firefox/addon/transmitter-for-transmission/)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/cdmpmfcgepijfiaaojbahpmpjfkgdgja.svg)](https://chrome.google.com/webstore/detail/transmitter-for-transmiss/cdmpmfcgepijfiaaojbahpmpjfkgdgja)
-[![unlicense](https://img.shields.io/badge/un-license-green.svg?style=flat)](http://unlicense.org)
+[
+![Mozilla Add-on](https://img.shields.io/amo/v/transmitter-for-transmission.svg)
+![Mozilla Stars](https://img.shields.io/amo/stars/transmitter-for-transmission.svg)
+![Mozilla Downloads](https://img.shields.io/amo/d/transmitter-for-transmission.svg)
+](https://addons.mozilla.org/en-US/firefox/addon/transmitter-for-transmission/)
+[
+![Chrome Web Store](https://img.shields.io/chrome-web-store/v/cdmpmfcgepijfiaaojbahpmpjfkgdgja.svg)
+![Chrome Stars](https://img.shields.io/chrome-web-store/stars/cdmpmfcgepijfiaaojbahpmpjfkgdgja.svg)
+![Chrome Users](https://img.shields.io/chrome-web-store/users/cdmpmfcgepijfiaaojbahpmpjfkgdgja.svg)
+](https://chrome.google.com/webstore/detail/transmitter-for-transmiss/cdmpmfcgepijfiaaojbahpmpjfkgdgja)
+[![unlicense](https://img.shields.io/badge/un-license-green.svg?style=flat)](https://unlicense.org)
 
 # Transmitter
 
@@ -31,11 +39,11 @@ Edge isn't supported yet because [it is weird](https://github.com/mozilla/webext
 
 ## Contributing
 
-By participating in this project you agree to follow the [Contributor Code of Conduct](http://contributor-covenant.org/version/1/4/) and to release your contributions under the Unlicense.
+By participating in this project you agree to follow the [Contributor Code of Conduct](https://contributor-covenant.org/version/1/4/) and to release your contributions under the Unlicense.
 
 [The list of contributors is available on GitHub](https://github.com/myfreeweb/transmitter/graphs/contributors).
 
 ## License
 
 This is free and unencumbered software released into the public domain.  
-For more information, please refer to the `UNLICENSE` file or [unlicense.org](http://unlicense.org).
+For more information, please refer to the `UNLICENSE` file or [unlicense.org](https://unlicense.org).
