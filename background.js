@@ -40,11 +40,15 @@ function blobToBase64 (blob) {
 	})
 }
 
-function addUrl (torrentUrl) {
-	let p
+function addUrl (torrentUrl, downloadDir) {
+	let p, params = {}
+	if (downloadDir) {
+		params = { 'download-dir': downloadDir }
+	}
 	if (torrentUrl.startsWith('magnet:')) {
 		console.log('Adding magnet', torrentUrl)
-		p = rpcCall('torrent-add', { filename: torrentUrl })
+		params.filename = torrentUrl
+		p = rpcCall('torrent-add', params)
 	} else {
 		// Download the torrent file *in the browser* to support private torrents
 		console.log('Downloading torrent', torrentUrl)
@@ -57,7 +61,8 @@ function addUrl (torrentUrl) {
 			}
 			throw new Error('Could not download torrent')
 		}).then(blobToBase64).then(b64 => {
-			return rpcCall('torrent-add', { metainfo: b64 })
+			params.metainfo = b64
+			return rpcCall('torrent-add', params)
 		})
 	}
 	return p.then(x => {
@@ -83,15 +88,43 @@ browser.webRequest.onBeforeRequest.addListener(
 
 ////// Context menu
 
-browser.contextMenus.create({
-	id: 'transmitter-add',
-	title: 'Download with Transmission remote',
-	contexts: ['link']
-})
+function createContextMenu () {
+	browser.storage.local.get('server').then(({server}) => {
+		browser.contextMenus.removeAll()
+		if (!server || !server.locations || !server.locations.length) {
+			browser.contextMenus.create({
+				id: 'transmitter-add',
+				title: 'Download with Transmission remote',
+				contexts: ['link']
+			})
+		} else {
+			browser.contextMenus.create({
+				id: 'transmitter-add',
+				title: 'Download to Default location',
+				contexts: ['link']
+			})
+			server.locations.forEach(location => {
+				browser.contextMenus.create({
+					id: 'transmitter-add-loc-' + location.index,
+					title: 'Download to ' + location.name,
+					contexts: ['link']
+				})
+			})
+		}
+	})
+}
+
+createContextMenu()
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === 'transmitter-add') {
 		return addUrl(info.linkUrl)
+	} else if (info.menuItemId.startsWith('transmitter-add-loc-')) {
+		let index = parseInt(info.menuItemId.substr('transmitter-add-loc-'.length))
+		browser.storage.local.get('server').then(({server}) => {
+			let path = server.locations[index].path
+			addUrl(info.linkUrl, path)
+		});
 	}
 })
 
@@ -165,9 +198,15 @@ browser.storage.onChanged.addListener((changes, area) => {
 	const oldv = changes.server.oldValue
 	const newv = changes.server.newValue
 	if (!oldv || oldv.base_url !== newv.base_url || oldv.username !== newv.username ||
-		oldv.password !== newv.password || oldv.badge_interval !== newv.badge_interval || oldv.badge !== newv.badge) {
+		oldv.password !== newv.password || oldv.badge_interval !== newv.badge_interval || oldv.badge !== newv.badge ||
+		arraysEqualDeep(oldv.locations, newv.locations)) {
 		setupExtractor()
 		setupBadge()
 		updateBadge()
+		createContextMenu()
 	}
 })
+
+function arraysEqualDeep (arr1, arr2) {
+	return JSON.stringify(arr1) !== JSON.stringify(arr2)
+}
