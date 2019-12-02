@@ -32,7 +32,23 @@
 		<div>Badge refresh interval <small>(minutes)</small></div>
 		<input type="number" name="badge_interval" value="1" min="1">
 	</label>
-	<button type="submit">Save</button>
+	<label for="locations">Download locations</label>
+	<fieldset>
+		<select id="locations" size="4">
+			<option disabled>Default location</option>
+		</select>
+		<label>
+			<div>Name</div>
+			<input type="text" id="location_name" disabled>
+		</label>
+		<label>
+			<div>Path <small>(absolute)</small></div>
+			<input type="text" id="location_path" disabled>
+		</label>
+		<button type="button" id="location_new">New</button>
+		<button type="button" id="location_delete" disabled>Delete</button>
+	</fieldset>
+	<button type="submit" id="save">Save</button>
 	<p>
 		Note: to log in, just go to the web interface. Transmitter will pick up your session.
 	</p>

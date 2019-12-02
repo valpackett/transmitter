@@ -1,4 +1,4 @@
-label {
+form > label {
 	display: block;
 	border-bottom: #c1c1c1 solid 1px;
 	padding: 0.5em;
