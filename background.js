@@ -124,7 +124,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 		browser.storage.local.get('server').then(({server}) => {
 			let path = server.locations[index].path
 			addUrl(info.linkUrl, path)
-		});
+		})
 	}
 })
 
@@ -132,7 +132,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 function updateBadge () {
 	browser.storage.local.get('server').then(({server}) => {
-		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'ul' && server.badge!=='auto') {
+		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'ul' && server.badge !== 'auto') {
 			return
 		}
 		return rpcCall('session-stats', {}).then(response => {
@@ -151,15 +151,15 @@ function updateBadge () {
 				browser.browserAction.setBadgeText({text: formatSpeed(args.uploadSpeed)})
 				break
 			case 'auto':
-				if(args.downloadSpeed>0){
+				if (args.downloadSpeed > 0) {
 					browser.browserAction.setBadgeBackgroundColor({color: 'green'})
-					browser.browserAction.setBadgeText({text: formatSpeed(args.downloadSpeed)})					
-				}else if(args.uploadSpeed>0){
+					browser.browserAction.setBadgeText({text: formatSpeed(args.downloadSpeed)})
+				} else if (args.uploadSpeed > 0) {
 					browser.browserAction.setBadgeBackgroundColor({color: 'blue'})
-					browser.browserAction.setBadgeText({text: formatSpeed(args.uploadSpeed)})			
-				}else{
+					browser.browserAction.setBadgeText({text: formatSpeed(args.uploadSpeed)})
+				} else {
 					browser.browserAction.setBadgeBackgroundColor({color: 'gray'})
-					browser.browserAction.setBadgeText({text: '' + args.activeTorrentCount})		
+					browser.browserAction.setBadgeText({text: '' + args.activeTorrentCount})
 				}
 				break
 			}
