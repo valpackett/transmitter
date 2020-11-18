@@ -41,7 +41,8 @@ function blobToBase64 (blob) {
 }
 
 function addUrl (torrentUrl, downloadDir) {
-	let p, params = {}
+	let p
+	let params = {}
 	if (downloadDir) {
 		params = { 'download-dir': downloadDir }
 	}
