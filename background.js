@@ -133,7 +133,9 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 function updateBadge () {
 	browser.storage.local.get('server').then(({server}) => {
-		if (server.badge !== 'num' && server.badge !== 'dl' && server.badge !== 'ul' && server.badge !== 'auto') {
+		if (!server || server.badge === 'off') {
+			browser.browserAction.setBadgeBackgroundColor({color: 'gray'})
+			browser.browserAction.setBadgeText({text: ''})
 			return
 		}
 		return rpcCall('session-stats', {}).then(response => {
@@ -177,12 +179,11 @@ browser.alarms.onAlarm.addListener(alarm => {
 function setupBadge () {
 	browser.alarms.clear('transmitter-badge-update').then(x => {
 		browser.storage.local.get('server').then(({server}) => {
-			if (!server) {
-				return
+			if (server && server.badge !== 'off') {
+				browser.alarms.create('transmitter-badge-update', {
+					periodInMinutes: parseInt(server.badge_interval || '1')
+				})
 			}
-			browser.alarms.create('transmitter-badge-update', {
-				periodInMinutes: parseInt(server.badge_interval || '1')
-			})
 			updateBadge()
 		})
 	})
