@@ -45,3 +45,32 @@ button {
 		flex: 2;
 	}
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #f9f9fa;
+    background: #202023;
+  }
+
+  form > label {
+	color: #f9f9fa;
+	text-shadow: 0 1px 1px #b1b1b3;
+	border-bottom: #4c4c4e;
+  }
+
+  input, select, option {
+	  color: #f9f9fa;
+	  background-color: #2a2a2e;
+	  border-color: #4c4c4e;
+  }
+
+  fieldset {
+	  border-color: #4c4c4e;
+  }
+
+  button {
+	  color: #f9f9fa;
+	  background-color: #373739;
+	  border-color: #4c4c4e;
+  }
+}
