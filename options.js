@@ -2,10 +2,10 @@ const form = document.getElementById('options-form')
 const warning = document.getElementById('warning')
 const saveBtn = form.querySelector('#save')
 const locations = form.querySelector('#locations')
-const location_name = form.querySelector('#location_name')
-const location_path = form.querySelector('#location_path')
-const location_new = form.querySelector('#location_new')
-const location_delete = form.querySelector('#location_delete')
+const locationName = form.querySelector('#location_name')
+const locationPath = form.querySelector('#location_path')
+const locationNew = form.querySelector('#location_new')
+const locationDelete = form.querySelector('#location_delete')
 
 form.addEventListener('submit', e => {
 	e.preventDefault()
@@ -64,35 +64,35 @@ function renderLocations (locationsData) {
 locations.addEventListener('change', refreshLocationEditor)
 
 function refreshLocationEditor () {
-	if (locations.selectedIndex == -1) {
-		location_name.value = ''
-		location_path.value = ''
-		location_name.disabled = true
-		location_path.disabled = true
-		location_delete.disabled = true
+	if (locations.selectedIndex === -1) {
+		locationName.value = ''
+		locationPath.value = ''
+		locationName.disabled = true
+		locationPath.disabled = true
+		locationDelete.disabled = true
 	} else {
 		let option = locations.options[locations.selectedIndex]
-		location_name.value = option.dataset.name
-		location_path.value = option.dataset.path
-		location_name.disabled = false
-		location_path.disabled = false
-		location_delete.disabled = false
+		locationName.value = option.dataset.name
+		locationPath.value = option.dataset.path
+		locationName.disabled = false
+		locationPath.disabled = false
+		locationDelete.disabled = false
 	}
 }
 
-location_name.addEventListener('input', () => {
+locationName.addEventListener('input', () => {
 	let option = locations.options[locations.selectedIndex]
-	option.dataset.name = location_name.value
+	option.dataset.name = locationName.value
 	refreshLocationOptionText(option)
 })
 
-location_path.addEventListener('input', () => {
+locationPath.addEventListener('input', () => {
 	let option = locations.options[locations.selectedIndex]
-	option.dataset.path = location_path.value
+	option.dataset.path = locationPath.value
 	refreshLocationOptionText(option)
 })
 
-location_delete.addEventListener('click', () => {
+locationDelete.addEventListener('click', () => {
 	locations.options[locations.selectedIndex].remove()
 	if (locations.options.length > 1) {
 		locations.selectedIndex = locations.options.length - 1
@@ -100,12 +100,12 @@ location_delete.addEventListener('click', () => {
 	refreshLocationEditor()
 })
 
-location_new.addEventListener('click', () => {
+locationNew.addEventListener('click', () => {
 	let option = createLocationOption('New location', '/path/to/location')
 	locations.appendChild(option)
 	locations.selectedIndex = locations.options.length - 1
 	refreshLocationEditor()
-	location_name.select()
+	locationName.select()
 })
 
 function createLocationOption (name, path) {
