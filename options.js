@@ -61,7 +61,7 @@ function renderLocations (locationsData) {
 		.forEach(opt => locations.appendChild(opt))
 }
 
-locations.addEventListener('change', refreshLocationEditor);
+locations.addEventListener('change', refreshLocationEditor)
 
 function refreshLocationEditor () {
 	if (locations.selectedIndex == -1) {
@@ -84,21 +84,21 @@ location_name.addEventListener('input', () => {
 	let option = locations.options[locations.selectedIndex]
 	option.dataset.name = location_name.value
 	refreshLocationOptionText(option)
-});
+})
 
 location_path.addEventListener('input', () => {
 	let option = locations.options[locations.selectedIndex]
 	option.dataset.path = location_path.value
 	refreshLocationOptionText(option)
-});
+})
 
 location_delete.addEventListener('click', () => {
 	locations.options[locations.selectedIndex].remove()
 	if (locations.options.length > 1) {
 		locations.selectedIndex = locations.options.length - 1
 	}
-	refreshLocationEditor();
-});
+	refreshLocationEditor()
+})
 
 location_new.addEventListener('click', () => {
 	let option = createLocationOption('New location', '/path/to/location')
@@ -106,7 +106,7 @@ location_new.addEventListener('click', () => {
 	locations.selectedIndex = locations.options.length - 1
 	refreshLocationEditor()
 	location_name.select()
-});
+})
 
 function createLocationOption (name, path) {
 	let option = document.createElement('option')
