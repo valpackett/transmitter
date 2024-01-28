@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Transmitter for Transmission",
   "author": "packett.cool",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Communicates with Transmission torrent client. Supports adding torrents (incl. magnet links) & quickly looking at torrent status.",
   "applications": {
     "gecko": {
@@ -23,7 +23,12 @@
     "http://transmitter.web-extension/*",
     "<all_urls>"
   ],
-  "optional_permissions": [ "webRequest", "webRequestBlocking", "http://*/*", "https://*/*" ],
+  "optional_permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "http://*/*",
+    "https://*/*"
+  ],
   "options_ui": {
     "page": "options.html"
   },
