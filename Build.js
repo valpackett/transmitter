@@ -9,7 +9,7 @@ const CODE = [
 	'background.js',
 	'options.html', 'options.css', 'options.js',
 	'popup.html', 'popup.css', 'popup.js',
-	'icon.svg', 'icon48.png', 'gear.svg', 'info.svg'
+	'icon.svg', 'icon48.png', 'gear.svg', 'info.svg', 'garbage-bin.svg'
 ]
 
 function addCode (zip) {

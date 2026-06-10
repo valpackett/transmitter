@@ -19,32 +19,57 @@ const torrentsList = document.getElementById('torrents-list')
 const torrentsTpl = document.getElementById('torrents-tpl')
 const torrentsError = document.getElementById('torrents-error')
 const getArgs = {
-	fields: ['name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
+	fields: ['id', 'name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
 }
 let cachedTorrents = []
 
 function renderTorrents (newTorrents) {
-	if (torrentsList.children.length < newTorrents.length) {
-		const dif = newTorrents.length - torrentsList.children.length
-		for (let i = 0; i < dif; i++) {
-			const node = document.importNode(torrentsTpl.content, true)
-			torrentsList.appendChild(node)
-		}
-	} else if (torrentsList.children.length > newTorrents.length) {
-		const oldLen = torrentsList.children.length
-		const dif = oldLen - newTorrents.length
-		for (let i = 1; i <= dif; i++) {
-			torrentsList.removeChild(torrentsList.children[oldLen - i])
-		}
-	}
-	for (let i = 0; i < newTorrents.length; i++) {
-		const torr = newTorrents[i]
-		const cont = torrentsList.children[i]
-		const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
-		cont.querySelector('.torrent-name').textContent = torr.name
-		cont.querySelector('.torrent-speeds').textContent = speeds
-		cont.querySelector('.torrent-progress').value = torr.percentDone * 100
-	}
+    if (torrentsList.children.length < newTorrents.length) {
+        const dif = newTorrents.length - torrentsList.children.length
+        for (let i = 0; i < dif; i++) {
+            const node = document.importNode(torrentsTpl.content, true)
+            torrentsList.appendChild(node)
+        }
+    } else if (torrentsList.children.length > newTorrents.length) {
+        const oldLen = torrentsList.children.length
+        const dif = oldLen - newTorrents.length
+        for (let i = 1; i <= dif; i++) {
+            torrentsList.removeChild(torrentsList.children[oldLen - i])
+        }
+    }
+    for (let i = 0; i < newTorrents.length; i++) {
+        const torr = newTorrents[i]
+        const cont = torrentsList.children[i]
+        const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
+        cont.querySelector('.torrent-name').textContent = torr.name
+        cont.querySelector('.torrent-speeds').textContent = speeds
+        cont.querySelector('.torrent-progress').value = torr.percentDone * 100
+
+        const torrHead = cont.querySelector('.torrent-head')
+
+        let deleteBtn = torrHead.querySelector('.remove-torrent-btn')
+        if (!deleteBtn) {
+            deleteBtn = document.createElement('button')
+            deleteBtn.className = 'remove-torrent-btn'
+            deleteBtn.innerHTML = '✕'
+            deleteBtn.title = 'Remove from list (keeps data)'
+            torrHead.appendChild(deleteBtn)
+        }
+        
+        deleteBtn.onclick = async (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            
+            if (torr.percentDone < 1) {
+                const confirmed = await showConfirm(`"${torr.name}" is incomplete. Remove it AND delete downloaded data?`);
+                if (confirmed) {
+                    removeTorrents([torr.id], true);
+                }
+            } else {
+                removeTorrents([torr.id], false);
+            }
+        }
+    }
 }
 
 function searchTorrents () {
@@ -97,3 +122,57 @@ browser.storage.local.get('server').then(({server}) => {
 		showConfig(server)
 	}
 })
+
+async function removeTorrents(ids, deleteData = false) {
+    if (!ids || ids.length === 0) return;
+    try {
+        const args = { ids: ids };
+        
+        if (deleteData === true) {
+            args['delete-local-data'] = true;
+        }
+
+        await rpcCall('torrent-remove', args);
+        
+        browser.storage.local.get('server').then(({server}) => {
+            if (server && server.base_url) {
+                refreshTorrentsLogErr(server);
+            }
+        });
+    } catch (err) {
+        console.error("Transmitter: Failed to remove torrents", err);
+    }
+}
+
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('custom-modal');
+        const text = document.getElementById('modal-text');
+        const btnYes = document.getElementById('modal-yes');
+        const btnCancel = document.getElementById('modal-cancel');
+
+        text.textContent = message;
+        modal.hidden = false;
+
+        const cleanup = () => {
+            modal.hidden = true;
+            btnYes.onclick = null;
+            btnCancel.onclick = null;
+        };
+
+        btnYes.onclick = () => { cleanup(); resolve(true); };
+        btnCancel.onclick = () => { cleanup(); resolve(false); };
+    });
+}
+
+document.getElementById('clear-completed').addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    const completedIds = cachedTorrents
+        .filter(t => t.percentDone === 1)
+        .map(t => t.id);
+        
+    if (completedIds.length > 0) {
+        removeTorrents(completedIds, false);
+    }
+});

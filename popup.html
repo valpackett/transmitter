@@ -11,6 +11,7 @@
 <div id="torrents-pane" hidden>
 	<header>
 		<h1>Transmitter</h1>
+		<a href="#" id="clear-completed" title="Clear Completed Torrents"><img src="garbage-bin.svg" alt="Clear Completed Torrents"></a>
 		<a href="#" class="webui-opener" target="_blank"><img src="icon.svg" alt="Open Web UI"></a>
 		<a href="#" class="config-opener"><img src="gear.svg" alt="Settings"></a>
 		<a href="https://github.com/valpackett/transmitter" class="info-opener" target="_blank"><img src="info.svg" alt="Extension Info"></a>
@@ -28,6 +29,16 @@
 	<ul id="torrents-list">
 	</ul>
 	<div id="torrents-error"></div>
+</div>
+
+<div id="custom-modal" hidden>
+    <div class="modal-content">
+        <p id="modal-text"></p>
+        <div class="modal-buttons">
+            <button id="modal-yes">Yes, delete data</button>
+            <button id="modal-cancel">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script src="browser-polyfill.min.js"></script>
