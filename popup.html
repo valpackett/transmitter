@@ -22,6 +22,7 @@
 			<div class="torrent-head">
 				<div class="torrent-name"></div>
 				<div class="torrent-speeds"></div>
+				<button class="remove-torrent-btn" title="Remove from list (keeps data)">✕</button>
 			</div>
 			<progress max="100" class="torrent-progress"></progress>
 		</li>
@@ -31,7 +32,7 @@
 	<div id="torrents-error"></div>
 </div>
 
-<div id="custom-modal" hidden>
+<dialog id="custom-modal">
     <div class="modal-content">
         <p id="modal-text"></p>
         <div class="modal-buttons">
@@ -39,7 +40,7 @@
             <button id="modal-cancel">Cancel</button>
         </div>
     </div>
-</div>
+</dialog>
 
 <script src="browser-polyfill.min.js"></script>
 <script src="common.js"></script>

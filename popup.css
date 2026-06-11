@@ -118,28 +118,18 @@ header img {
 }
 
 #custom-modal {
-    position: fixed; 
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-
-#custom-modal[hidden] {
-    display: none !important;
-}
-
-.modal-content {
     background: rgb(250, 250, 250);
     color: rgb(60, 60, 60);
     padding: 1.5em;
     border-radius: 4px;
     text-align: center;
     width: 75%;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     border: 1px solid #ccc;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+#custom-modal::backdrop {
+    background: rgba(0, 0, 0, 0.7);
 }
 
 #modal-text {
@@ -196,7 +186,7 @@ header img {
 	#torrents-list li {
 		border-color: rgb(70, 70, 70);
 	}
-	.modal-content {
+	#custom-modal {
         background: rgb(50, 50, 50);
         color: rgb(240, 240, 240);
         border-color: rgb(70, 70, 70);

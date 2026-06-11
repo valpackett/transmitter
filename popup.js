@@ -4,14 +4,14 @@ const torrentsPane = document.getElementById('torrents-pane')
 const configPane = document.getElementById('config-pane')
 
 for (const opener of document.querySelectorAll('.config-opener')) {
-	opener.addEventListener('click', e => {
-		browser.runtime.openOptionsPage()
-	})
+    opener.addEventListener('click', e => {
+        browser.runtime.openOptionsPage()
+    })
 }
 
 function showConfig (server) {
-	torrentsPane.hidden = true
-	configPane.hidden = false
+    torrentsPane.hidden = true
+    configPane.hidden = false
 }
 
 const torrentsSearch = document.getElementById('torrents-search')
@@ -19,7 +19,7 @@ const torrentsList = document.getElementById('torrents-list')
 const torrentsTpl = document.getElementById('torrents-tpl')
 const torrentsError = document.getElementById('torrents-error')
 const getArgs = {
-	fields: ['id', 'name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
+    fields: ['id', 'name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
 }
 let cachedTorrents = []
 
@@ -45,23 +45,14 @@ function renderTorrents (newTorrents) {
         cont.querySelector('.torrent-speeds').textContent = speeds
         cont.querySelector('.torrent-progress').value = torr.percentDone * 100
 
-        const torrHead = cont.querySelector('.torrent-head')
-
-        let deleteBtn = torrHead.querySelector('.remove-torrent-btn')
-        if (!deleteBtn) {
-            deleteBtn = document.createElement('button')
-            deleteBtn.className = 'remove-torrent-btn'
-            deleteBtn.innerHTML = '✕'
-            deleteBtn.title = 'Remove from list (keeps data)'
-            torrHead.appendChild(deleteBtn)
-        }
+        const deleteBtn = cont.querySelector('.remove-torrent-btn')
         
         deleteBtn.onclick = async (e) => {
             e.preventDefault()
             e.stopPropagation()
             
             if (torr.percentDone < 1) {
-                const confirmed = await showConfirm(`"${torr.name}" is incomplete. Remove it AND delete downloaded data?`);
+                const confirmed = await showConfirm(`"${torr.name}" is incomplete.\nRemove it AND delete downloaded data?`);
                 if (confirmed) {
                     removeTorrents([torr.id], true);
                 }
@@ -73,54 +64,54 @@ function renderTorrents (newTorrents) {
 }
 
 function searchTorrents () {
-	let newTorrents = cachedTorrents
-	const val = torrentsSearch.value.toLowerCase().trim()
-	if (val.length > 0) {
-		newTorrents = newTorrents.filter(x => x.name.toLowerCase().includes(val))
-	}
-	renderTorrents(newTorrents)
+    let newTorrents = cachedTorrents
+    const val = torrentsSearch.value.toLowerCase().trim()
+    if (val.length > 0) {
+        newTorrents = newTorrents.filter(x => x.name.toLowerCase().includes(val))
+    }
+    renderTorrents(newTorrents)
 }
 torrentsSearch.addEventListener('change', searchTorrents)
 torrentsSearch.addEventListener('keyup', searchTorrents)
 
 function refreshTorrents (server) {
-	return rpcCall('torrent-get', getArgs).then(response => {
-		let newTorrents = response.arguments.torrents
-		newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
-		cachedTorrents = newTorrents
-		torrentsSearch.hidden = newTorrents.length <= 8
-		if (torrentsSearch.hidden) {
-			torrentsSearch.value = ''
-			renderTorrents(newTorrents)
-		} else {
-			searchTorrents()
-		}
-	})
+    return rpcCall('torrent-get', getArgs).then(response => {
+        let newTorrents = response.arguments.torrents
+        newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
+        cachedTorrents = newTorrents
+        torrentsSearch.hidden = newTorrents.length <= 8
+        if (torrentsSearch.hidden) {
+            torrentsSearch.value = ''
+            renderTorrents(newTorrents)
+        } else {
+            searchTorrents()
+        }
+    })
 }
 
 function refreshTorrentsLogErr (server) {
-	return refreshTorrents(server).catch(err => {
-		console.error(err)
-		torrentsError.textContent = 'Error: ' + err.toString()
-	})
+    return refreshTorrents(server).catch(err => {
+        console.error(err)
+        torrentsError.textContent = 'Error: ' + err.toString()
+    })
 }
 
 function showTorrents (server) {
-	torrentsPane.hidden = false
-	configPane.hidden = true
-	for (const opener of document.querySelectorAll('.webui-opener')) {
-		opener.href = server.base_url + 'web/'
-	}
-	refreshTorrents(server).catch(_ => refreshTorrentsLogErr(server))
-	setInterval(() => refreshTorrentsLogErr(server), 2000)
+    torrentsPane.hidden = false
+    configPane.hidden = true
+    for (const opener of document.querySelectorAll('.webui-opener')) {
+        opener.href = server.base_url + 'web/'
+    }
+    refreshTorrents(server).catch(_ => refreshTorrentsLogErr(server))
+    setInterval(() => refreshTorrentsLogErr(server), 2000)
 }
 
 browser.storage.local.get('server').then(({server}) => {
-	if (server && server.base_url && server.base_url !== '') {
-		showTorrents(server)
-	} else {
-		showConfig(server)
-	}
+    if (server && server.base_url && server.base_url !== '') {
+        showTorrents(server)
+    } else {
+        showConfig(server)
+    }
 })
 
 async function removeTorrents(ids, deleteData = false) {
@@ -146,16 +137,16 @@ async function removeTorrents(ids, deleteData = false) {
 
 function showConfirm(message) {
     return new Promise((resolve) => {
-        const modal = document.getElementById('custom-modal');
+        const dialog = document.getElementById('custom-modal');
         const text = document.getElementById('modal-text');
         const btnYes = document.getElementById('modal-yes');
         const btnCancel = document.getElementById('modal-cancel');
 
         text.textContent = message;
-        modal.hidden = false;
+        dialog.showModal();
 
         const cleanup = () => {
-            modal.hidden = true;
+            dialog.close();
             btnYes.onclick = null;
             btnCancel.onclick = null;
         };
