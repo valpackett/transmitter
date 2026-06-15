@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
 	background: rgb(240, 240, 240);
 	color: rgb(60, 60, 60);
 	margin: 0 auto;
@@ -59,11 +60,6 @@ header img {
 	border: 1px solid #999;
 }
 
-#torrents-search[hidden] {
-	/* Why is this needed lmao?? */
-	display: none;
-}
-
 #torrents-search:focus {
 	box-shadow: 0 0 6px #aac;
 }
@@ -89,11 +85,25 @@ header img {
 #torrents-list progress {
 	width: 100%;
 	margin-top: 0.2em;
+	appearance: none;
+	height: 6px;
+	border-radius: 4px;
+}
+
+#torrents-list progress.complete::-webkit-progress-value,
+#torrents-list progress.complete::-moz-progress-bar {
+	background: #26aa55;
+}
+
+#torrents-list progress.paused::-webkit-progress-value,
+#torrents-list progress.paused::-moz-progress-bar {
+	background: #828282;
 }
 
 .torrent-head {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .torrent-name {
@@ -121,6 +131,49 @@ header img {
 	opacity: 1;
 }
 
+.pause-resume-btn {
+	background: transparent;
+	border: none;
+	font-size: 14px;
+	cursor: pointer;
+	padding: 0;
+	margin-left: 0;
+	opacity: 0.7;
+	transition: opacity 0.2s, color 0.2s;
+	width: 1.5em;
+	height: 1.5em;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.pause-resume-btn:hover:not(:disabled) {
+	opacity: 1;
+}
+
+.pause-resume-btn:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+.pause-resume-btn.running-state {
+	color: #828282;
+}
+
+.pause-resume-btn.paused-state {
+	color: #0060df;
+}
+
+.pause-resume-btn.complete-state {
+	color: #26aa55;
+}
+
+.torrent-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+}
+
 #custom-modal {
 	background: rgb(250, 250, 250);
 	color: rgb(60, 60, 60);
@@ -129,7 +182,7 @@ header img {
 	text-align: center;
 	width: 75%;
 	border: 1px solid #ccc;
-	box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 #custom-modal::backdrop {
@@ -174,32 +227,35 @@ header img {
 }
 
 @media screen and (prefers-color-scheme: dark) {
-	body, html {
+
+	body,
+	html {
 		background: rgb(60, 60, 60);
 		color: rgb(240, 240, 240);
 	}
+
 	#config-pane a {
 		color: rgb(140, 140, 255);
 	}
+
 	header img {
 		filter: invert();
 	}
+
 	#torrents-list {
 		background: rgb(40, 40, 40);
 	}
+
 	#torrents-list li {
 		border-color: rgb(70, 70, 70);
 	}
-	#torrents-search {
-		background: rgb(80, 80, 80);
-		border-color: rgb(140, 140, 140);
-		color: rgb(240, 240, 240);
-	}
+
 	#custom-modal {
 		background: rgb(50, 50, 50);
 		color: rgb(240, 240, 240);
 		border-color: rgb(70, 70, 70);
 	}
+
 	#modal-cancel {
 		background: rgb(80, 80, 80);
 		color: rgb(240, 240, 240);

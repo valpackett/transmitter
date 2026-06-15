@@ -19,7 +19,7 @@ const torrentsList = document.getElementById('torrents-list')
 const torrentsTpl = document.getElementById('torrents-tpl')
 const torrentsError = document.getElementById('torrents-error')
 const getArgs = {
-	fields: ['id', 'name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition']
+	fields: ['id', 'name', 'percentDone', 'rateDownload', 'rateUpload', 'queuePosition', 'status']
 }
 let cachedTorrents = []
 
@@ -41,22 +41,70 @@ function renderTorrents (newTorrents) {
 		const torr = newTorrents[i]
 		const cont = torrentsList.children[i]
 		const speeds = '↓ ' + formatSpeed(torr.rateDownload) + 'B/s ↑ ' + formatSpeed(torr.rateUpload) + 'B/s'
+		const progress = cont.querySelector('.torrent-progress')
 		cont.querySelector('.torrent-name').textContent = torr.name
 		cont.querySelector('.torrent-speeds').textContent = speeds
 		cont.querySelector('.torrent-progress').value = torr.percentDone * 100
 
-		const deleteBtn = cont.querySelector('.remove-torrent-btn')
+		const pauseResumeBtn = cont.querySelector('.pause-resume-btn')
+		const isComplete = torr.percentDone === 1
+		const isRunning = torr.status !== 0 && !isComplete
+		
+		if (isComplete) {
+			pauseResumeBtn.textContent = '✓'
+			pauseResumeBtn.title = 'Complete - Seeding'
+			pauseResumeBtn.classList.remove('paused-state', 'running-state')
+			pauseResumeBtn.classList.add('complete-state')
+			pauseResumeBtn.disabled = true
+			progress.classList.toggle('complete', true)
+		} else if (isRunning) {
+			pauseResumeBtn.textContent = '⏸'
+			pauseResumeBtn.title = 'Pause'
+			pauseResumeBtn.classList.remove('paused-state', 'complete-state')
+			pauseResumeBtn.classList.add('running-state')
+			pauseResumeBtn.disabled = false
+			progress.classList.toggle('paused', false)
+		} else {
+			pauseResumeBtn.textContent = '▶'
+			pauseResumeBtn.title = 'Resume'
+			pauseResumeBtn.classList.remove('running-state', 'complete-state')
+			pauseResumeBtn.classList.add('paused-state')
+			pauseResumeBtn.disabled = false
+			progress.classList.toggle('paused', true)
+		}
+		
+		pauseResumeBtn.onclick = async (e) => {
+			e.preventDefault()
+			e.stopPropagation()
+			
+			if (isRunning) {
+				await rpcCall('torrent-stop', { ids: [torr.id] })
+			} else if (!isComplete) {
+				await rpcCall('torrent-start', { ids: [torr.id] })
+			}
+			browser.storage.local.get('server').then(({server}) => {
+				if (server && server.base_url) {
+					refreshTorrentsLogErr(server)
+				}
+			})
+		}
 
+		const deleteBtn = cont.querySelector('.remove-torrent-btn')
+		
 		deleteBtn.onclick = async (e) => {
 			e.preventDefault()
 			e.stopPropagation()
 
-			const incomplete = torr.percentDone < 1;
-			const confirmed = await showConfirm(incomplete
-				? `"${torr.name}" is incomplete.\nRemove it AND delete downloaded data?`
-				: `"${torr.name}" is complete.\nRemove it without deleting downloaded data?`);
-			if (confirmed) {
-				removeTorrents([torr.id], incomplete);
+			if (torr.percentDone < 1) {
+				const confirmed = await showConfirm(`"${torr.name}" is incomplete.\nRemove it AND delete downloaded data?`);
+				if (confirmed) {
+					removeTorrents([torr.id], true);
+				}
+			} else {
+				const confirmed = await showConfirm(`"${torr.name}" is complete and seeding.\nRemove from list? Downloaded data will be kept.`);
+				if (confirmed) {
+					removeTorrents([torr.id], false);
+				}
 			}
 		}
 	}
@@ -73,27 +121,26 @@ function searchTorrents () {
 torrentsSearch.addEventListener('change', searchTorrents)
 torrentsSearch.addEventListener('keyup', searchTorrents)
 
-async function refreshTorrents () {
-	const response = await rpcCall('torrent-get', getArgs);
-	const newTorrents = response.arguments.torrents
-	newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
-	cachedTorrents = newTorrents
-	torrentsSearch.hidden = newTorrents.length <= 8
-	if (torrentsSearch.hidden) {
-		torrentsSearch.value = ''
-		renderTorrents(newTorrents)
-	} else {
-		searchTorrents()
-	}
+function refreshTorrents (server) {
+	return rpcCall('torrent-get', getArgs).then(response => {
+		let newTorrents = response.arguments.torrents
+		newTorrents.sort((x, y) => y.queuePosition - x.queuePosition)
+		cachedTorrents = newTorrents
+		torrentsSearch.hidden = newTorrents.length <= 8
+		if (torrentsSearch.hidden) {
+			torrentsSearch.value = ''
+			renderTorrents(newTorrents)
+		} else {
+			searchTorrents()
+		}
+	})
 }
 
-async function refreshTorrentsLogErr () {
-	try {
-		return await refreshTorrents();
-	} catch (err) {
-		console.error(err);
-		torrentsError.textContent = 'Error: ' + err.toString();
-	}
+function refreshTorrentsLogErr (server) {
+	return refreshTorrents(server).catch(err => {
+		console.error(err)
+		torrentsError.textContent = 'Error: ' + err.toString()
+	})
 }
 
 function showTorrents (server) {
@@ -102,8 +149,8 @@ function showTorrents (server) {
 	for (const opener of document.querySelectorAll('.webui-opener')) {
 		opener.href = server.base_url + 'web/'
 	}
-	refreshTorrents().catch(_ => refreshTorrentsLogErr())
-	setInterval(_ => refreshTorrentsLogErr(), 2000)
+	refreshTorrents(server).catch(_ => refreshTorrentsLogErr(server))
+	setInterval(() => refreshTorrentsLogErr(server), 2000)
 }
 
 browser.storage.local.get('server').then(({server}) => {
@@ -118,15 +165,20 @@ async function removeTorrents(ids, deleteData = false) {
 	if (!ids || ids.length === 0) return;
 	try {
 		const args = { ids: ids };
-
+		
 		if (deleteData === true) {
 			args['delete-local-data'] = true;
 		}
 
 		await rpcCall('torrent-remove', args);
+		
+		browser.storage.local.get('server').then(({server}) => {
+			if (server && server.base_url) {
+				refreshTorrentsLogErr(server);
+			}
+		});
 	} catch (err) {
-		console.error(err);
-		torrentsError.textContent = 'Failed to remove torrents: ' + err.toString();
+		console.error("Transmitter: Failed to remove torrents", err);
 	}
 }
 
@@ -158,8 +210,10 @@ document.getElementById('clear-completed').addEventListener('click', async (e) =
 		.filter(t => t.percentDone === 1)
 		.map(t => t.id);
 
-	const ts = completedIds.length;
-	if (ts > 0 && await showConfirm(`Remove ${ts} completed torrent${ts == 1 ? '' : 's'} without deleting downloaded data?`)) {
-		removeTorrents(completedIds, false);
+	if (completedIds.length > 0) {
+		const confirmed = await showConfirm(`Remove ${completedIds.length} completed torrent(s) from list? Downloaded data will be kept.`)
+		if (confirmed) {
+			removeTorrents(completedIds, false)
+		}
 	}
 });

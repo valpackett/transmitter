@@ -12,8 +12,8 @@
 <div id="torrents-pane" hidden>
 	<header>
 		<h1>Transmitter</h1>
-		<a href="#" class="webui-opener" target="_blank"><img src="icon.svg" alt="Open Web UI"></a>
 		<a href="#" id="clear-completed" title="Clear Completed Torrents"><img src="garbage-bin.svg" alt="Clear Completed Torrents"></a>
+		<a href="#" class="webui-opener" target="_blank"><img src="icon.svg" alt="Open Web UI"></a>
 		<a href="#" class="config-opener"><img src="gear.svg" alt="Settings"></a>
 		<a href="https://val.packett.cool/apps/transmitter/" class="info-opener" target="_blank"><img src="info.svg" alt="This Extension's Web Page"></a>
 	</header>
@@ -23,7 +23,10 @@
 			<div class="torrent-head">
 				<div class="torrent-name"></div>
 				<div class="torrent-speeds"></div>
-				<button class="remove-torrent-btn" title="Remove from list (keeps data)">✕</button>
+				<div class="torrent-actions">
+					<button class="pause-resume-btn"></button>
+					<button class="remove-torrent-btn" title="Remove from list">✕</button>
+				</div>
 			</div>
 			<progress max="100" class="torrent-progress"></progress>
 		</li>
@@ -37,7 +40,7 @@
 	<div class="modal-content">
 		<p id="modal-text"></p>
 		<div class="modal-buttons">
-			<button id="modal-yes">Yes, delete data</button>
+			<button id="modal-yes">Yes</button>
 			<button id="modal-cancel">Cancel</button>
 		</div>
 	</div>
